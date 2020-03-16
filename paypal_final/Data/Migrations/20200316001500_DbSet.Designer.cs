@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using paypal_final.Data;
 
 namespace paypal_final.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200316001500_DbSet")]
+    partial class DbSet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,8 +194,6 @@ namespace paypal_final.Data.Migrations
 
                     b.Property<string>("custom");
 
-                    b.Property<string>("finalAmount");
-
                     b.Property<string>("intent");
 
                     b.Property<string>("payerCountryCode");
@@ -213,10 +213,6 @@ namespace paypal_final.Data.Migrations
                     b.Property<string>("paymentMethod");
 
                     b.Property<string>("paymentState");
-
-                    b.Property<string>("quantity");
-
-                    b.Property<string>("unitPrice");
 
                     b.HasKey("paymentID");
 

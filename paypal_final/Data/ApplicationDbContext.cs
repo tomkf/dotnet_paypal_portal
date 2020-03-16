@@ -12,6 +12,7 @@ namespace paypal_final.Data
     public class IPN
     {
         // This lets you link the request to paypal with the response.
+        //list number purcahsed, price paid, 
         public string custom { get; set; }
 
         [Display(Name = "ID")]
@@ -35,6 +36,12 @@ namespace paypal_final.Data
         public string intent { get; set; }
         public string paymentMethod { get; set; }
         public string paymentState { get; set; }
+
+
+        //custom fields: 
+        public string quantity { get; set; }
+        public string unitPrice { get; set; }
+        public string finalAmount { get; set; }
     }
     public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
@@ -42,6 +49,8 @@ namespace paypal_final.Data
             : base(options)
         {
         }
+
+        public DbSet<IPN> IPNs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
