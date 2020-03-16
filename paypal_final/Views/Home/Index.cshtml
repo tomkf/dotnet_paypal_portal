@@ -63,58 +63,67 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.custom)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.cart)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.create_time)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.payerID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.payerFirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.payerLastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.payerMiddleName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.payerEmail)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.payerCountryCode)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.payerStatus)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.amount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.currency)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.intent)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.paymentMethod)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.paymentState)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.paymentID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.paymentID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.paymentID">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.custom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.cart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.create_time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.payerID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.payerFirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.payerLastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.payerMiddleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.payerEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.payerCountryCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.payerStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.currency)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.intent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.paymentMethod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.paymentState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.finalAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.unitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.quantity)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.paymentID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.paymentID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.paymentID">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
@@ -186,7 +195,7 @@
                     "payerStatus":      payment.payer.status,
                     "amount":           payment.transactions[0].amount.total,
                     "currency":         payment.transactions[0].amount.currency,
-                    "custom":           payment.transactions[0].custom,
+                    "custom":            `1, ${total.toString()}`,
                     "finalAmount":      total.toString(),
                     "quantity":         "1",
                     "unitPrice":        "5.00"
