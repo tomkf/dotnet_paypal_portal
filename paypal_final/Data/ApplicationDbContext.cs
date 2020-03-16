@@ -43,6 +43,8 @@ namespace paypal_final.Data
         {
         }
 
+        public DbSet<IPN> IPNs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
