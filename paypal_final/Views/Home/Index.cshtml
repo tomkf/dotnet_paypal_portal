@@ -166,6 +166,10 @@
                 console.log(payment);
                 alert("This JSON is from Paypal: " + JSON.stringify(payment));
                 console.log("-------------------------------------")
+                var total = 5 + payment.transactions[0].amount.total;
+                 console.log("Total statement: ")
+                console.log(total);
+                var total = parseFloat(payment.transactions[0].amount.total) + 5.00;
                 var dataObject = {
                     "cart":             payment.cart,
                     "intent":           payment.intent,
@@ -182,7 +186,10 @@
                     "payerStatus":      payment.payer.status,
                     "amount":           payment.transactions[0].amount.total,
                     "currency":         payment.transactions[0].amount.currency,
-                    "custom":           payment.transactions[0].custom
+                    "custom":           payment.transactions[0].custom,
+                    "finalAmount":      total.toString(),
+                    "quantity":         "1",
+                    "unitPrice":        "5.00"
                 }
                 // The payment is complete!
                 // You can now show a confirmation message to the customer
