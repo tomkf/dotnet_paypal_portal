@@ -1,8 +1,214 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<paypal_final.Data.IPN>
+
+@{
+    ViewData["Title"] = "Index";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.custom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.create_time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.payerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.payerFirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.payerLastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.payerMiddleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.payerEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.payerCountryCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.payerStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.currency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.intent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.paymentMethod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.paymentState)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.custom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.create_time)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.payerID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.payerFirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.payerLastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.payerMiddleName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.payerEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.payerCountryCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.payerStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.currency)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.intent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.paymentMethod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.paymentState)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.paymentID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.paymentID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.paymentID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div id="paypal-button"></div>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script>
+    paypal.Button.render({
+        env: 'sandbox', // Or ' production '
+        style: { // You can customize your button here.
+            size: 'small',
+            color: 'gold',
+            shape: 'pill',
+            label: 'checkout'
+        },
+        client: {
+            // You need to change this to your client ID
+            sandbox: 'AaiZXCTeadQoG0CY6LTIt_c6B1Kd3B4Q1H1kE1Vzz2-Tcsds8xG4KK_Ap2hRYje_WP5MS2_LHWvUeW0F',
+            // production: '3W8F5EEJKUJP4KSY'  // Switch to ‘production’ when live.
+        },
+        commit: true, // Show a 'Pay Now' button
+        payment: function (data, actions) {
+            return actions.payment.create({
+                payment: {
+                    transactions: [{
+                        // The 'custom' field helps you to link the paypal request
+                        // with paypal's response which is important.
+                        // You may want use a 'custom' field to send an accountID from
+                        // your site so you can uniquely identify the person making the
+                        // payment when Paypal notifies you.
+                        // Sometimes a person at your site will pay at Paypal with
+                        // an entirely different set of credentials. They may pay with
+                        // a credit card or account which belongs to their spouse or
+                        // another family member. In situations like these, relating
+                        // payments to accounts on your site can be difficult.
+                        // The custom property value that you send to Paypal for a
+                        // payment request is returned in Paypal's reponse.
+                        custom: 'Custom data goes here!',
+                        amount: { total: @ViewBag.TotalPrice, currency: 'USD' }
+                    }
+                    ]
+                }
+            });
+        },
+        onAuthorize: function (data, actions) {
+            return actions.payment.execute().then(function (payment) {
+                console.log("This is what comes back from Paypal: ")
+                console.log(payment);
+                alert("This JSON is from Paypal: " + JSON.stringify(payment));
+                console.log("-------------------------------------")
+                var dataObject = {
+                    "cart":             payment.cart,
+                    "intent":           payment.intent,
+                    "paymentID":        payment.id,
+                    "create_time":      payment.create_time,
+                    "paymentState":     payment.state,
+                    "payerEmail":       payment.payer.payer_info.email,
+                    "payerID":          payment.payer.payer_info.payer_id,
+                    "payerFirstName":   payment.payer.payer_info.first_name,
+                    "payerLastName":    payment.payer.payer_info.last_name,
+                    "payerMiddleName":  payment.payer.payer_info.middle_name,
+                    "payerCountryCode": payment.payer.payer_info.country_code,
+                    "paymentMethod":    payment.payer.payment_method,
+                    "payerStatus":      payment.payer.status,
+                    "amount":           payment.transactions[0].amount.total,
+                    "currency":         payment.transactions[0].amount.currency,
+                    "custom":           payment.transactions[0].custom
+                }
+                // The payment is complete!
+                // You can now show a confirmation message to the customer
+                $.ajax({
+                    type: "post",
+                    url: "/Home/PaySuccess",
+                    data: JSON.stringify(dataObject),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    //after success
+                    success: function (msg) {
+                        console.log("Data: " + JSON.stringify(data));
+                        window.location.href
+                        ="/Home/FinishShopping?paymentID=" + data.paymentID;
+                    },
+                    //after fail
+                    error: function (msg) {
+                        alert("fail: " + JSON.stringify(msg));
+                    }
+                });
+            })
+        },
+        onCancel: function (data, actions) {
+            /*
+            * Buyer cancelled the payment
+            */
+        },
+    }, '#paypal-button');
+</script>
