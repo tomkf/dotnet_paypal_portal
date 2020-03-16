@@ -7,17 +7,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 
 namespace paypal_final.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+
     public class ResetPasswordModel : PageModel
     {
+        private readonly IConfiguration _configuration;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public ResetPasswordModel(UserManager<IdentityUser> userManager)
+        public ResetPasswordModel(UserManager<IdentityUser> userManager,
+          IConfiguration configuration)
         {
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -60,6 +65,8 @@ namespace paypal_final.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
+            string pepper = _configuration["pepper"];
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -72,7 +79,7 @@ namespace paypal_final.Areas.Identity.Pages.Account
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
 
-            var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
+            var result = await _userManager.ResetPasswordAsync(user, Input.Code, pepper + Input.Password);
             if (result.Succeeded)
             {
                 return RedirectToPage("./ResetPasswordConfirmation");

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace paypal_final.Areas.Identity.Pages.Account
@@ -20,16 +21,31 @@ namespace paypal_final.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
+        private readonly IConfiguration _configuration;
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+
+        UserManager<IdentityUser> userManager,
+
+        SignInManager<IdentityUser> signInManager,
+
+        ILogger<RegisterModel> logger,
+
+        IEmailSender emailSender,
+
+        IConfiguration configuration)
+
         {
+
             _userManager = userManager;
+
             _signInManager = signInManager;
+
             _logger = logger;
+
             _emailSender = emailSender;
+
+            _configuration = configuration;
+
         }
 
         [BindProperty]
@@ -67,7 +83,9 @@ namespace paypal_final.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                string pepper = _configuration["pepper"];
+                var result = await _userManager.CreateAsync(user, pepper + Input.Password);
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace paypal_final.Areas.Identity.Pages.Account
 {
@@ -18,10 +19,16 @@ namespace paypal_final.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        private readonly IConfiguration _configuration;
+
+        public LoginModel(SignInManager<IdentityUser> signInManager,
+
+        ILogger<LoginModel> logger, IConfiguration configuration)
+
         {
             _signInManager = signInManager;
             _logger = logger;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -67,6 +74,9 @@ namespace paypal_final.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+
+            string pepper = _configuration["pepper"];
+
             System.Threading.Thread.Sleep(2000);
             returnUrl = returnUrl ?? Url.Content("~/");
 
@@ -74,7 +84,8 @@ namespace paypal_final.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, pepper + Input.Password, Input.RememberMe, lockoutOnFailure: true);
+               
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
