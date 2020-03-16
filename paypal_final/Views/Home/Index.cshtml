@@ -2,6 +2,7 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+
 @model IEnumerable<paypal_final.Data.IPN>
 
 @{
@@ -9,12 +10,11 @@
 }
 
 <h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 @if (SignInManager.IsSignedIn(User))
 {
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
     <table class="table">
         <thead>
             <tr>
@@ -62,6 +62,15 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.paymentState)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.unitPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.finalAmount)
                 </th>
                 <th></th>
             </tr>
@@ -116,13 +125,13 @@
                         @Html.DisplayFor(modelItem => item.paymentState)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.finalAmount)
+                        @Html.DisplayFor(modelItem => item.quantity)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.unitPrice)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.quantity)
+                        @Html.DisplayFor(modelItem => item.finalAmount)
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.paymentID">Edit</a> |
@@ -135,9 +144,10 @@
     </table>
 }
 
-    <div id="paypal-button"></div>
-    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
-    <script>
+
+<div id="paypal-button"></div>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script>
     paypal.Button.render({
         env: 'sandbox', // Or ' production '
         style: { // You can customize your button here.
@@ -233,4 +243,4 @@
             */
         },
     }, '#paypal-button');
-    </script>
+</script>
